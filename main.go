@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/LeGEC/gosumwhy"
+	"github.com/LeGEC/gosumwhy/pkg/gosumwhy"
 )
 
 type CliOptions struct {
