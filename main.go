@@ -26,13 +26,11 @@ func setupFlags() {
 
 	// flags are defined here
 	// if any code changes here, update the documentation in usage.go
-	flag.StringVar(&options.GraphFile, "f", "", `read graph from that file.
-The default behavior is: if stdin looks like a terminal, run 'go mod graph' and read its output;
-otherwise, read the graph from stdin.
-Providing '-' as a filename (as in 'gosumshy -f -') forces reading from stdin.`)
-	flag.BoolVar(&options.RunGoMod, "gomod", false, "if provided, run 'go mod graph' and read its output. See also -modpath")
-	flag.StringVar(&options.ModulePath, "modpath", "", "searches the go module located at that path. Implies -gomod")
-	flag.BoolVar(&options.AllVersions, "allv", false, "the path command will print a dependency path for *each* version listed for that module")
+	flag.StringVar(&options.GraphFile, "f", "", "read graph from that `file`\n"+
+		"providing '-' as a filename (as in 'gosumshy -f -') forces reading from stdin\n")
+	flag.BoolVar(&options.RunGoMod, "gomod", false, "if provided, run 'go mod graph' and read its output. See also -modpath\n")
+	flag.StringVar(&options.ModulePath, "modpath", "", "run 'go mod graph' on the go module located at that `path`. Implies -gomod\n")
+	flag.BoolVar(&options.AllVersions, "allv", false, "if set, the path command will print a dependency path for *each* version listed for that module\n")
 }
 
 func main() {

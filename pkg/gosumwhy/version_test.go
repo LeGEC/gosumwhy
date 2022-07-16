@@ -140,10 +140,6 @@ func TestVersion(t *testing.T) {
 		for j := range specs {
 			a, b := specs[i], specs[j]
 
-			if a == "v2.3.1" && b == "v2.3.1+incompatible" {
-				_ = true
-			}
-
 			less := i < j
 
 			got := lessVersionsString(a, b)

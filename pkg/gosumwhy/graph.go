@@ -8,25 +8,7 @@ import (
 	"strings"
 )
 
-type Version struct {
-	Path    string
-	Version string `json:",omitempty"`
-}
-
-func (v Version) String() string {
-	if v.Version != "" {
-		return v.Path + "@" + v.Version
-	}
-	return v.Path
-}
-
-func (v Version) LessThan(o Version) bool {
-	if v.Path != o.Path {
-		return v.Path < o.Path
-	}
-	return lessVersionsString(v.Version, o.Version)
-}
-
+// A Graph represents a dependency graph between go modules.
 type Graph struct {
 	mod      map[string]Version
 	versions map[Version][]Version
@@ -34,6 +16,8 @@ type Graph struct {
 	root   Version
 	uses   map[Version][]Version
 	usedBy map[Version][]Version
+
+	pf *pathFinder
 }
 
 func newGraph() *Graph {
@@ -129,18 +113,13 @@ func (g *Graph) tidy() {
 	}
 }
 
-func (g *Graph) pathTo(v Version) ([]Version, error) {
-	if v == g.root {
-		return []Version{v}, nil
+func (g *Graph) pathTo(target Version) ([]Version, error) {
+	if g.pf == nil {
+		g.pf = newPathFinder(g)
+		g.pf.computeAllDistances(g.root)
 	}
 
-	pf := newPathFinder(g)
-	path, err := pf.findPath(g.root, v)
-	if err != nil {
-		return nil, err
-	}
-
-	return path, nil
+	return g.pf.extractPath(g.root, target)
 }
 
 func spec2version(spec string) Version {

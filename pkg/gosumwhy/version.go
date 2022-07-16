@@ -6,6 +6,28 @@ import (
 	"strings"
 )
 
+// Version represents a module and its version. The struct is copy/pasted from golang.org/x/mod/module
+type Version struct {
+	Path    string
+	Version string `json:",omitempty"`
+}
+
+// String returns a string representation 'path@version'
+func (v Version) String() string {
+	if v.Version != "" {
+		return v.Path + "@" + v.Version
+	}
+	return v.Path
+}
+
+// LessThan compares two versions. If two
+func (v Version) LessThan(o Version) bool {
+	if v.Path != o.Path {
+		return v.Path < o.Path
+	}
+	return lessVersionsString(v.Version, o.Version)
+}
+
 var v000rx = regexp.MustCompile(`^v(0\.0\.0)-(([0-9]+)-([0-9a-f]+))$`)
 var vXYZrx = regexp.MustCompile(`^v([0-9]+(?:\.[0-9]+)*)(?:-(.*))?(\+incompatible)?$`)
 
